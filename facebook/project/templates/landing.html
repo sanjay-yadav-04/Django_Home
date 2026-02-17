@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Facebook Clone</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      background: #f0f2f5;
+    }
+
+    .fb-logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #1877f2;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-box {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .post-box {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.08);
+    }
+
+    footer {
+      background: white;
+      padding: 15px;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: gray;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+    <div class="container-fluid px-4">
+
+      <a class="navbar-brand fb-logo" href="index.html">facebook</a>
+
+      <!-- Search -->
+      <form class="d-none d-md-flex ms-3 w-50">
+        <input
+          class="form-control rounded-pill"
+          type="search"
+          placeholder="Search Facebook"
+        />
+      </form>
+
+      <!-- Login Button -->
+      <div class="ms-auto">
+        <a href="{% url 'login' %}" class="btn btn-primary rounded-pill">
+          Login
+        </a>
+      </div>
+
+    </div>
+  </nav>
+
+
+  <!-- ===== HEADER ===== -->
+  <header class="py-4 text-center">
+    <h2 class="fw-bold">Welcome to Facebook Clone</h2>
+    <p class="text-muted">Connect with friends and the world around you.</p>
+  </header>
+
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Left Sidebar -->
+      <div class="col-lg-3">
+        <div class="sidebar-box">
+          <h5 class="fw-bold">Menu</h5>
+          <ul class="list-unstyled mt-3">
+            <li class="mb-2">🏠 Home</li>
+            <li class="mb-2">👥 Friends</li>
+            <li class="mb-2">📷 Photos</li>
+            <li class="mb-2">🎥 Videos</li>
+            <li class="mb-2">📌 Saved</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Feed -->
+      <div class="col-lg-6">
+
+        <!-- Create Post -->
+        <div class="post-box">
+          <h6 class="fw-bold">Create Post</h6>
+          <input
+            type="text"
+            class="form-control rounded-pill mt-2"
+            placeholder="What's on your mind?"
+          />
+          <div class="d-flex justify-content-between mt-3">
+            <button class="btn btn-light w-100 me-2">📷 Photo</button>
+            <button class="btn btn-light w-100 me-2">🎥 Video</button>
+            <button class="btn btn-light w-100">😊 Feeling</button>
+          </div>
+        </div>
+
+        <!-- Sample Posts -->
+        <div class="post-box">
+          <h6 class="fw-bold mb-1">Rahul Sharma</h6>
+          <small class="text-muted">2 hrs ago</small>
+          <p class="mt-2">Just created my first Facebook clone 😄🔥</p>
+          <div class="d-flex gap-3 mt-2">
+            <button class="btn btn-outline-secondary btn-sm">👍 Like</button>
+            <button class="btn btn-outline-secondary btn-sm">💬 Comment</button>
+            <button class="btn btn-outline-secondary btn-sm">↗ Share</button>
+          </div>
+        </div>
+
+        <div class="post-box">
+          <h6 class="fw-bold mb-1">Priya Singh</h6>
+          <small class="text-muted">5 hrs ago</small>
+          <p class="mt-2">Bootstrap makes UI so easy 💙</p>
+          <div class="d-flex gap-3 mt-2">
+            <button class="btn btn-outline-secondary btn-sm">👍 Like</button>
+            <button class="btn btn-outline-secondary btn-sm">💬 Comment</button>
+            <button class="btn btn-outline-secondary btn-sm">↗ Share</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Sidebar -->
+      <div class="col-lg-3">
+        <div class="sidebar-box">
+          <h5 class="fw-bold">Contacts</h5>
+          <ul class="list-unstyled mt-3">
+            <li class="mb-2">🟢 Aman</li>
+            <li class="mb-2">🟢 Neha</li>
+            <li class="mb-2">🟢 Arjun</li>
+            <li class="mb-2">🟢 Simran</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-box mt-4">
+          <h5 class="fw-bold">Sponsored</h5>
+          <p class="text-muted mb-0">Your ad can be here 🚀</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    © 2026 Facebook Clone | Made with Bootstrap 5
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
