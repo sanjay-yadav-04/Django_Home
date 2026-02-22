@@ -1,0 +1,495 @@
+{% extends 'landing.html' %}
+{% block content %}
+
+ <style>
+    /* Page Background */
+    body {
+      background-color: #f4f6f9;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Table Title */
+    h2 {
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 20px;
+    }
+
+    /* Employees Table */
+    .content-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Table Head */
+    .content-table thead {
+      background: linear-gradient(135deg, #0d6efd, #084298);
+      color: #ffffff;
+    }
+
+    .content-table thead th {
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Table Body */
+    .content-table tbody td {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #333;
+      vertical-align: middle;
+    }
+
+    /* Row Border */
+    .content-table tbody tr {
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    /* Hover Effect */
+    .content-table tbody tr:hover {
+      background-color: #f1f5ff;
+      transition: 0.2s ease-in-out;
+    }
+
+    /* Zebra Striping */
+    .content-table tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    /* No Employees Message */
+    .content-table tbody td.text-muted {
+      font-style: italic;
+      padding: 20px;
+    }
+
+  </style>
+
+<div class="container-fluid mt-3">
+  <div class="row" style="min-height: 85vh;">
+
+    <!-- ================= SIDEBAR ================= -->
+    <div class="col-md-3 col-lg-2 bg-dark text-white p-3">
+      <h5 class="text-center mb-4">Admin Dashboard</h5>
+
+      <div class="d-grid gap-3">
+
+        <a href="?page=addEmp" class="btn btn-light w-100 fw-semibold">
+          ➕ Add Employee
+        </a>
+
+        <a href="{% url 'show_employee' %}?page=showEmp" class="btn btn-outline-light w-100">
+        👥 Show Employees
+        </a> 
+
+        <a href="?page=add_department" class="btn btn-outline-light w-100">
+          🏢 Add Department
+        </a>
+
+        <a href="?page=showDept" class="btn btn-outline-light w-100">
+          📋 Show Departments
+        </a>
+
+        <a href="{% url 'all_queries' %}?page=all_queries" class="btn btn-outline-warning w-100">
+        ❓ User Queries
+        </a>
+
+
+        <a href="{% url 'dashboard' %}" class="btn btn-success w-100 mt-3">
+          🏠 Go to Dashboard
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ================= CONTENT ================= -->
+    <div class="col-md-9 col-lg-10 p-4 bg-light rounded">
+
+      <!-- ===== DASHBOARD HOME ===== -->
+      {% if not request.GET.page %}
+<h2 class="mb-4">Admin Dashboard 👋</h2>
+
+<div class="row g-4">
+
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Total Users</h6>
+        <h2 class="text-primary">{{ total_users }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Employees</h6>
+        <h2 class="text-success">{{ total_employees }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Departments</h6>
+        <h2 class="text-warning">{{ total_departments }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Queries</h6>
+        <h2 class="text-danger">{{ total_queries }}</h2>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+      <!-- ===== ADD EMPLOYEE ===== -->
+{% elif request.GET.page == "addEmp" %}
+  <h2>Add Employee</h2>
+  <hr>
+
+  <div class="message-wrapper">
+    {% for i in messages %}
+      <div class="alert alert-{{ i.tags }} alert-dismissible fade show custom-alert"
+           role="alert">
+        <span class="alert-icon">
+          {% if i.tags == 'success' %}
+            ✔
+          {% elif i.tags == 'error' %}
+            ✖
+          {% elif i.tags == 'warning' %}
+            ⚠
+          {% else %}
+            ℹ
+          {% endif %}
+        </span>
+
+        <span class="alert-text">{{ i }}</span>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form action="{% url 'addemp' %}" method="post"
+        class="col-md-6 bg-white p-4 rounded shadow-sm">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="emp_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="emp_email" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Contact</label>
+      <input type="text" name="emp_contact" class="form-control" required>
+    </div>
+
+   <div class="mb-3">
+  <label class="form-label">Department</label>
+  <select name="emp_department" class="form-select" required>
+    <option value="" selected disabled>-- Select Department --</option>
+
+    {% for d in deptdata %}
+      <option value="{{ d.id }}">{{ d.dept_name }}</option>
+    {% endfor %}
+    
+  </select>
+</div>
+
+
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" name="emp_password" class="form-control" required>
+    </div>
+
+    <button class="btn btn-primary">💾 Save Employee</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+
+        
+
+      <!-- ===== ADD DEPARTMENT ===== -->
+{% elif request.GET.page == "add_department" %}
+<h2>Add Department</h2>
+<hr>
+
+<form action="{% url 'save_department' %}" method="post"
+      class="col-md-6 bg-white p-4 rounded shadow-sm">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="form-label">Department Name</label>
+    <input type="text" name="dept_name" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Description</label>
+    <textarea name="description" class="form-control" rows="3"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-success">💾 Save Department</button>
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+      <!-- ===== SHOW EMPLOYEES ===== -->
+{% elif request.GET.page == "showEmp" %}
+
+<div class="container mt-5">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+      <h2 class="mb-3">Employees List</h2>
+
+      <!-- ===== SEARCH FORM ===== -->
+      <form method="GET" class="row g-2 mb-3">
+        <input type="hidden" name="page" value="showEmp">
+
+        <div class="col-md-3">
+          <input type="text" name="name" value="{{ request.GET.name }}"
+            class="form-control" placeholder="Search Name">
+        </div>
+
+        <div class="col-md-3">
+          <input type="text" name="email" value="{{ request.GET.email }}"
+            class="form-control" placeholder="Search Email">
+        </div>
+
+        <div class="col-md-2">
+          <input type="text" name="contact" value="{{ request.GET.contact }}"
+            class="form-control" placeholder="Search Contact">
+        </div>
+
+        <div class="col-md-2">
+          <input type="text" name="dept" value="{{ request.GET.dept }}"
+            class="form-control" placeholder="Search Department">
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+          <button type="submit" class="btn btn-primary w-100">Search</button>
+          <a href="?page=showEmp" class="btn btn-secondary w-100">Reset</a>
+        </div>
+      </form>
+
+      <!-- ===== TABLE ===== -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Contact</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if all_emp %}
+              {% for i in all_emp %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.emp_name }}</td>
+                <td>{{ i.emp_email }}</td>
+                <td>{{ i.emp_contact }}</td>
+                <td>{{ i.emp_department }}</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="5" class="text-center text-muted">
+                  No employees found
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+      <!-- ===== SHOW DEPARTMENTS ===== -->
+      {% elif request.GET.page == "showDept" %}
+        <div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="mb-3">Departments</h5>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark text-center">
+          <tr>
+            <th style="width: 60px;">#</th>
+            <th>Department Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for i in deptdata %}
+          <tr>
+            <td class="text-center">{{ forloop.counter }}</td>
+            <td>{{ i.dept_name }}</td>
+            <td class="text-muted">
+              {{ i.description|default:"—" }}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-center text-muted">
+              No departments found
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+      <!-- ===== USER QUERIES ===== -->
+{% elif request.GET.page == "all_queries" %}
+
+<h2 class="fw-bold mb-3">User Queries</h2>
+<hr>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover bg-white">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>Query</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% if qdata %}
+        {% for q in qdata %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ q.Name }}</td>
+            <td>{{ q.Email }}</td>
+            <td>{{ q.department }}</td>
+            <td>{{ q.Query }}</td>
+
+            <td>
+              {% if q.status|lower == "pending" %}
+                <span class="badge bg-warning text-dark">Pending</span>
+              {% else %}
+                <span class="badge bg-success">Done</span>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if not q.admin_rep %}
+                <a href="?page=all_queries&reply_id={{ q.id }}" class="btn btn-sm btn-primary">
+                  Reply
+                </a>
+              {% else %}
+                <span class="badge bg-secondary">Replied</span>
+              {% endif %}
+            </td>
+
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="7" class="text-center text-muted">
+            No queries found
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ✅ Reply Form on Same Page -->
+{% if request.GET.reply_id and reply_query %}
+  <hr class="mt-4 mb-3">
+
+  <h4 class="fw-bold">Reply to Query</h4>
+
+  <div class="card shadow-sm p-4 col-md-8">
+
+    <form method="post" action="{% url 'reply_save' %}">
+      {% csrf_token %}
+
+      <input type="hidden" name="qid" value="{{ reply_query.id }}">
+
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" value="{{ reply_query.Name }}" readonly>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-control" value="{{ reply_query.Email }}" readonly>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Department</label>
+        <input type="text" class="form-control" value="{{ reply_query.department }}" readonly>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Query</label>
+        <textarea class="form-control" rows="3" readonly>{{ reply_query.Query }}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Admin Reply</label>
+        <textarea name="admin_rep" class="form-control" rows="4" required placeholder="Type your reply..."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-success">
+        Send Reply
+      </button>
+
+      <a href="?page=all_queries" class="btn btn-secondary">
+        Cancel
+      </a>
+
+    </form>
+
+  </div>
+{% endif %}
+
+
+</div>
+</div>
+</div>
+
+{% endif %}
+
+{% endblock content %}
+
