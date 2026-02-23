@@ -203,6 +203,7 @@ body {
         </form>
       </div>
 
+      
       {% elif request.GET.page == "all" %}
       <!-- ALL QUERIES -->
 <h3 class="fw-bold mb-3">All Queries</h3>
@@ -218,32 +219,31 @@ body {
       </tr>
     </thead>
 
+    <!-- ✅ FIXED: Only ONE tbody -->
     <tbody>
-      <tbody>
-  {% for q in all_queries %}
-  <tr>
-    <td>{{ forloop.counter }}</td>
+      {% for q in all_queries %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ q.department }}</td>
+        <td>{{ q.Query }}</td>
+        <td>
+          {% if q.status and q.status|lower == "pending" %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% else %}
+            <span class="badge bg-success">Done</span>
+          {% endif %}
+        </td>
+      </tr>
 
-    <!-- FIXED -->
-    <td>{{ q.department }}</td>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-muted">
+          No queries found
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
 
-    <td>{{ q.Query }}</td>
-
-    <td>
-      {% if q.status|lower == "pending" %}
-        <span class="badge bg-warning text-dark">Pending</span>
-      {% else %}
-        <span class="badge bg-success">Done</span>
-      {% endif %}
-    </td>
-  </tr>
-
-  {% empty %}
-  <tr>
-    <td colspan="4" class="text-center text-muted">No queries found</td>
-  </tr>
-  {% endfor %}
-</tbody>
   </table>
 </div>
 

@@ -36,38 +36,69 @@ def login(req):
     return render(req, 'login.html')
 
 
+# ------------------------------------------------------------------------------------------
+def password_reset(request):
+    return render(request, 'forget_password.html')
 
-def password_reset(req):
-    return render(req,'forget_password.html')
 
-def reset_pass_code(req):
-    if req.method == 'POST':
-        email = req.POST.get('email')
+def reset_pass_code(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        # ✅ Use correct field name
+        if not Emp.objects.filter(emp_email=email).exists():
+            return render(request, 'forget_password.html', {'error': 'Email not registered'})
+
         otp = random.randint(1000, 9999)
 
+        # send OTP mail
         send_mail(
-            subject="Mail From Facebook",
-            message=f"Hi,\n\nYour email: {email}\nYour OTP for reset password is: {otp}",
+            subject="Password Reset OTP",
+            message=f"Your OTP for password reset is: {otp}",
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],             
+            recipient_list=[email],
             fail_silently=False,
         )
-        req.session['reset_otp'] = otp
-        req.session['reset_email'] = email
-        return render(req, 'set_new_password.html')
-    return render(req, 'forget_password.html')
+
+        request.session['reset_otp'] = str(otp)
+        request.session['reset_email'] = email
+
+        return render(request, 'set_new_password.html')
+
+    return render(request, 'forget_password.html')
+
+
+def confirm_password(request):
+    if request.method == "POST":
+        entered_otp = request.POST.get('otp')
+        new_password = request.POST.get('password')
+        confirm_pass = request.POST.get('confirm_password')
+
+        session_otp = request.session.get('reset_otp')
+        email = request.session.get('reset_email')
+
+        if not session_otp or not email:
+            return redirect('password_reset')
+
+        if entered_otp != session_otp:
+            return render(request, 'set_new_password.html', {'error': 'Invalid OTP'})
+
+        if new_password != confirm_pass:
+            return render(request, 'set_new_password.html', {'error': 'Passwords do not match'})
+
+        # ✅ Use correct field name
+        employee = Emp.objects.get(emp_email=email)
+        employee.emp_password = new_password  # plain text, as you requested
+        employee.save()
+
+        del request.session['reset_otp']
+        del request.session['reset_email']
+
+        return redirect('login')
+
+    return redirect('password_reset')
         
-def confirm_password(req):
-    if 'reset_otp' in req.session and 'reset_email' in req.session:
-        if req.method=="POST":
-            new_password=req.POST.get('password')
-            confirm_password=req.POST.get('confirm_password')
-            if new_password==confirm_password:
-                return redirect('login')
-            else:
-                return redirect('set_new_password')
-        
-            
+# --------------------------------------------------------------------------------------------------------         
 
 def logout(req):
 
